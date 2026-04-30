@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python *)",
+      "Bash(venv/Scripts/python.exe *)",
+      "Bash(../venv/Scripts/python.exe *)",
+      "Bash(/c/Users/mani/Desktop/Ultimate-Texas-Holdem-1/venv/Scripts/python.exe *)"
+    ]
+  }
+}
