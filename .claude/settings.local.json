@@ -25,7 +25,10 @@
       "PowerShell(venv\\\\Scripts\\\\python.exe -m src.training.train_sarsa_lambda --episodes 5000000 --output-suffix \"_5M_lam099\" --lam 0.99)",
       "PowerShell(venv\\\\Scripts\\\\python.exe -m src.evaluation.eval_one_qtable --qtable results/sarsa_lambda_qtable_5M_lam05.npz)",
       "PowerShell(venv\\\\Scripts\\\\python.exe -m src.evaluation.eval_one_qtable --qtable results/sarsa_lambda_qtable_5M_lam09.npz)",
-      "PowerShell(venv\\\\Scripts\\\\python.exe -m src.evaluation.eval_one_qtable --qtable results/sarsa_lambda_qtable_5M_lam099.npz)"
+      "PowerShell(venv\\\\Scripts\\\\python.exe -m src.evaluation.eval_one_qtable --qtable results/sarsa_lambda_qtable_5M_lam099.npz)",
+      "PowerShell(venv\\\\Scripts\\\\python.exe -m src.figures.fig1_mc_convergence; venv\\\\Scripts\\\\python.exe -m src.figures.fig2_policy_ranking; venv\\\\Scripts\\\\python.exe -m src.figures.fig3_method_comparison; venv\\\\Scripts\\\\python.exe -m src.figures.fig4_q_learning_alpha_sweep; venv\\\\Scripts\\\\python.exe -m src.figures.fig5_sarsa_lambda_sweep; venv\\\\Scripts\\\\python.exe -m src.figures.fig6_policy_heatmap)",
+      "PowerShell(venv\\\\Scripts\\\\python.exe -m src.figures.fig2_policy_ranking; venv\\\\Scripts\\\\python.exe -m src.figures.fig6_policy_heatmap)",
+      "PowerShell(venv\\\\Scripts\\\\python.exe -m src.figures.fig3_method_comparison)"
     ]
   }
 }
