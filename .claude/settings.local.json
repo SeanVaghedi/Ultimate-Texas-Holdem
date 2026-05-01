@@ -4,7 +4,18 @@
       "Bash(python *)",
       "Bash(venv/Scripts/python.exe *)",
       "Bash(../venv/Scripts/python.exe *)",
-      "Bash(/c/Users/mani/Desktop/Ultimate-Texas-Holdem-1/venv/Scripts/python.exe *)"
+      "Bash(/c/Users/mani/Desktop/Ultimate-Texas-Holdem-1/venv/Scripts/python.exe *)",
+      "Bash(awk NR>=6 *)",
+      "Bash(grep -v \"it/s\\\\]\\\\|^\\\\s*$\\\\|^.*%|\")",
+      "Bash(where python *)",
+      "Bash(where pytest *)",
+      "Bash(py -3.13 -m pytest --version)",
+      "Bash(py *)",
+      "Bash(venv\\\\Scripts\\\\python.exe *)",
+      "PowerShell(venv\\\\Scripts\\\\python.exe -m pytest tests/test_sarsa_agent.py -v)",
+      "PowerShell(venv\\\\Scripts\\\\python.exe -m src.training.train_sarsa --episodes 5000000 --output-suffix \"_5M\")",
+      "PowerShell(venv\\\\Scripts\\\\python.exe -m src.evaluation.inspect_qtable --qtable results/sarsa_qtable_5M.npz)",
+      "PowerShell(venv\\\\Scripts\\\\python.exe -m src.evaluation.run_baselines)"
     ]
   }
 }
