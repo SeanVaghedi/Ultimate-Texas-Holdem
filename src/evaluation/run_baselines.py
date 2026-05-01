@@ -1,4 +1,4 @@
-"""Evaluate baselines + trained MC, Q-learning, and SARSA agents and dump to JSON.
+"""Evaluate baselines + trained MC, Q-learning, SARSA, SARSA(lambda), and (if available) linear-FA agents.
 
 Run from repo root:
 
@@ -18,12 +18,15 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 
 from agents.mc_agent import MonteCarloAgent  # noqa: E402
+from agents.mc_linear_fa import MonteCarloLinearFAAgent  # noqa: E402
 from agents.q_learning_agent import QLearningAgent  # noqa: E402
 from agents.sarsa_agent import SarsaAgent  # noqa: E402
+from agents.sarsa_lambda_agent import SarsaLambdaAgent  # noqa: E402
 from evaluation.evaluate import (  # noqa: E402
     evaluate_policy,
     print_evaluation_summary,
 )
+from linear_q import LinearQ  # noqa: E402
 from qtable import QTable  # noqa: E402
 from strategies.baselines import (  # noqa: E402
     always_fold_policy,
@@ -38,6 +41,8 @@ SEED = 0
 MC_QTABLE_PATH = "results/mc_qtable_5M.npz"
 Q_QTABLE_PATH = "results/q_qtable_5M.npz"
 SARSA_QTABLE_PATH = "results/sarsa_qtable_5M.npz"
+SARSA_LAMBDA_PATH = "results/sarsa_lambda_qtable_5M_lam09.npz"
+LINEAR_FA_PATH = "results/mc_linear_fa_5M.npz"
 OUTPUT_JSON_PATH = "results/baseline_evaluation.json"
 
 
@@ -92,6 +97,33 @@ def main() -> None:
     print_evaluation_summary(
         "Trained SARSA Agent (5M episodes)", results["sarsa_trained_5M"]
     )
+
+    sarsa_lambda_q_table = QTable()
+    sarsa_lambda_q_table.load(SARSA_LAMBDA_PATH)
+    sarsa_lambda_agent = SarsaLambdaAgent(
+        sarsa_lambda_q_table, random.Random(SEED)
+    )
+    results["sarsa_lambda_5M_lam09"] = evaluate_policy(
+        sarsa_lambda_agent.frozen_policy_fn, NUM_HANDS, seed=SEED
+    )
+    print_evaluation_summary(
+        "Trained SARSA(lambda=0.9) Agent (5M episodes)",
+        results["sarsa_lambda_5M_lam09"],
+    )
+
+    if Path(LINEAR_FA_PATH).exists():
+        linear_q = LinearQ()
+        linear_q.load(LINEAR_FA_PATH)
+        linear_fa_agent = MonteCarloLinearFAAgent(
+            linear_q, random.Random(SEED)
+        )
+        results["mc_linear_fa_5M"] = evaluate_policy(
+            linear_fa_agent.frozen_policy_fn, NUM_HANDS, seed=SEED
+        )
+        print_evaluation_summary(
+            "Trained MC + Linear FA Agent (5M episodes)",
+            results["mc_linear_fa_5M"],
+        )
 
     Path(OUTPUT_JSON_PATH).parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_JSON_PATH, "w") as f:

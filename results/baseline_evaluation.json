@@ -187,5 +187,59 @@
       }
     },
     "fold_rate": 0.54063
+  },
+  "sarsa_lambda_5M_lam09": {
+    "num_hands": 100000,
+    "total_net_chips": -43621.5,
+    "mean_net_chips": -0.436215,
+    "std_error": 0.011931747136850914,
+    "ci_95_lower": -0.4596012243882278,
+    "ci_95_upper": -0.4128287756117722,
+    "house_edge_percent": 43.621500000000005,
+    "house_edge_ci_lower_percent": 41.28287756117722,
+    "house_edge_ci_upper_percent": 45.96012243882278,
+    "action_counts": {
+      "preflop": {
+        "check": 83320,
+        "bet_3x": 10764,
+        "bet_4x": 5916
+      },
+      "flop": {
+        "check": 74717,
+        "bet_2x": 8603
+      },
+      "river": {
+        "fold": 47323,
+        "bet_1x": 27394
+      }
+    },
+    "fold_rate": 0.47323
+  },
+  "mc_linear_fa_5M": {
+    "num_hands": 100000,
+    "total_net_chips": -28403.5,
+    "mean_net_chips": -0.284035,
+    "std_error": 0.012699766383195796,
+    "ci_95_lower": -0.30892654211106374,
+    "ci_95_upper": -0.2591434578889362,
+    "house_edge_percent": 28.403499999999998,
+    "house_edge_ci_lower_percent": 25.914345788893623,
+    "house_edge_ci_upper_percent": 30.892654211106375,
+    "action_counts": {
+      "preflop": {
+        "check": 84965,
+        "bet_3x": 1836,
+        "bet_4x": 13199
+      },
+      "flop": {
+        "check": 58199,
+        "bet_2x": 26766
+      },
+      "river": {
+        "fold": 34920,
+        "bet_1x": 23279
+      }
+    },
+    "fold_rate": 0.3492
   }
 }
