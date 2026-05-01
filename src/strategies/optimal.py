@@ -6,13 +6,25 @@ published optimal of ~2.185%. The rules below intentionally simplify the
 true optimal strategy (notably: never raise 3x preflop).
 """
 
+import itertools
 from typing import Dict, List
 
 from treys import Card, Evaluator
 
 from hand_eval import evaluate_seven
+from payouts import compute_payouts
 
 _EVALUATOR = Evaluator()
+
+_RANKS = "23456789TJQKA"
+_SUITS = "shdc"
+_FULL_DECK: List[int] = [Card.new(r + s) for r in _RANKS for s in _SUITS]
+
+# Treys rank class 9 = High Card; classes 1..8 are pair or better.
+_HIGH_CARD_CLASS = 9
+
+# Folding at the river forfeits ante + blind.
+_RIVER_FOLD_EV = -2.0
 
 # Treys rank ints — 2=0, 3=1, ..., 8=6, 9=7, T=8, J=9, Q=10, K=11, A=12.
 
@@ -87,12 +99,52 @@ def _flop_should_raise(hole_cards: List[int], flop_cards: List[int]) -> bool:
     return False
 
 
+def river_ev_of_betting(
+    player_hole: List[int], community: List[int]
+) -> float:
+    """Exact EV of betting 1x at the river, averaged over all 990 dealer hands.
+
+    Enumerates every C(45, 2) = 990 dealer hole-card pairing from the
+    cards not in player_hole or community, evaluates the dealer's 7-card
+    hand, and computes the resulting payout (ante + blind + 1x play bet).
+    Returns the mean payout.
+    """
+    used = set(player_hole) | set(community)
+    remaining = [c for c in _FULL_DECK if c not in used]
+
+    player_rank, player_category = evaluate_seven(player_hole, community)
+
+    total = 0.0
+    for c1, c2 in itertools.combinations(remaining, 2):
+        dealer_rank = _EVALUATOR.evaluate(community, [c1, c2])
+
+        if dealer_rank < player_rank:
+            player_wins = False
+        elif dealer_rank > player_rank:
+            player_wins = True
+        else:
+            player_wins = None
+
+        dealer_qualifies = (
+            _EVALUATOR.get_rank_class(dealer_rank) != _HIGH_CARD_CLASS
+        )
+
+        total += compute_payouts(
+            player_hand_category=player_category,
+            player_wins=player_wins,
+            dealer_qualifies=dealer_qualifies,
+            ante_bet_size=1,
+            blind_bet_size=1,
+            play_bet_size=1,
+        )
+    return total / 990.0
+
+
 def _river_should_bet(
     hole_cards: List[int], community_cards: List[int]
 ) -> bool:
-    """Bet 1x at river iff the player has at least a pair (else fold)."""
-    _, category = evaluate_seven(hole_cards, community_cards)
-    return category != "HIGH_CARD"
+    """Bet 1x at river iff EV of betting exceeds EV of folding (-2)."""
+    return river_ev_of_betting(hole_cards, community_cards) > _RIVER_FOLD_EV
 
 
 def _is_top_pair_or_overpair(
